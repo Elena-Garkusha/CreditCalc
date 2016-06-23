@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data>
+        <record model="ir.actions.act_window" id="car_list_action">
+            <field name="name">Cars</field>
+            <field name="res_model">creditcalc.car</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="main_creditcalc_menu" name="Credit Calculator"/>
+
+        <menuitem id="creditcalc_menu" name="Credit Calculator"
+                  parent="main_creditcalc_menu"/>
+
+        <menuitem id="cars_menu" name="Cars" parent="creditcalc_menu"
+                  action="car_list_action"/>
+
+        <record model="ir.ui.view" id="car_tree_view">
+            <field name="name">car.tree</field>
+            <field name="model">creditcalc.car</field>
+            <field name="arch" type="xml">
+                <tree string="Car Tree">
+                    <field name="name"/>
+                    <field name="model"/>
+                    <field name="year"/>
+                    <field name="price"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="car_form_view">
+            <field name="name">car.form</field>
+            <field name="model">creditcalc.car</field>
+            <field name="arch" type="xml">
+                <form string="Car Form">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="model"/>
+                            <field name="year"/>
+                            <field name="kms"/>
+                            <field name="price"/>
+                            <field name="owner_id"/>
+                            <field name="sold"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    <record model="ir.actions.act_window" id="rate_list_action">
+        <field name="name">Rates</field>
+        <field name="res_model">creditcalc.rate</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="rates_menu" name="Rates" parent="creditcalc_menu"
+                  action="rate_list_action"/>
+
+    <record model="ir.ui.view" id="rate_tree_view">
+        <field name="name">rate.tree</field>
+        <field name="model">creditcalc.rate</field>
+        <field name="arch" type="xml">
+            <tree string="Rate Tree">
+                <field name="date"/>
+                <field name="rate"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="contract_list_action">
+        <field name="name">Contracts</field>
+        <field name="res_model">creditcalc.contract</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="contracts_menu" name="Contracts" parent="creditcalc_menu"
+                  action="contract_list_action"/>
+
+    <record model="ir.ui.view" id="contract_tree_view">
+        <field name="name">contract.tree</field>
+        <field name="model">creditcalc.contract</field>
+        <field name="arch" type="xml">
+            <tree string="Contract Tree">
+                <field name="customer_id"/>
+                <field name="date"/>
+                <field name="rate"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+     <record model="ir.ui.view" id="contract_form_view">
+         <field name="name">contract.form</field>
+         <field name="model">creditcalc.contract</field>
+         <field name="arch" type="xml">
+             <form string="Contract Form">
+                 <sheet>
+                     <group>
+                         <field name="customer_id"/>
+                         <field name="car_id" string="Car"/>
+                         <field name="date"/>
+                         <field name="rate"/>
+                         <field name="term"/>
+                         <field name="deposit"/>
+                         <field name="state"/>
+                     </group>
+                 </sheet>
+             </form>
+         </field>
+     </record>
+
+    <record model="ir.ui.view" id="wizard_form_view">
+        <field name="name">wizard.form</field>
+        <field name="model">creditcalc.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Credit Calculator">
+                <group>
+                    <group string="Parameters to choose">
+                        <field name="name"/>
+                        <field name="model"/>
+                        <field name="year"/>
+                        <field name="term"/>
+                        <field name="deposit"/>
+                    </group>
+                    <group string="Calculate fields">
+                        <!--<field name="discount"/>-->
+                        <!--<field name="rate"/>-->
+                        <!--<field name="payment"/>-->
+                        <!--<field name="price"/>-->
+                    </group>
+                </group>
+                <footer>
+                    <!--<button name="subscribe" type="object"-->
+                            <!--string="Subscribe" class="oe_highlight"/>-->
+                    <!--or-->
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <act_window id="launch_calculator_wizard"
+                name="Your credit calculator"
+                src_model="creditcalc.car"
+                res_model="creditcalc.wizard"
+                view_mode="form"
+                target="new"
+                key2="client_action_multi"/>
+
+    <menuitem id="calculator_menu" name="Calculator" parent="creditcalc_menu"
+                  action="launch_calculator_wizard"/>
+
+    </data>
+</openerp>
