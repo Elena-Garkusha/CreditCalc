@@ -5,9 +5,9 @@ from openerp import models, fields, api
 class Wizard(models.TransientModel):
     _name = 'creditcalc.wizard'
 
-    name = fields.Many2one(comodel_name='creditcalc.car', String="Brand")
-    model = fields.Many2one('creditcalc.car', String="Model")
-    year = fields.Many2one('creditcalc.car', String="Year")
+    brand = fields.Many2one('creditcalc.carbrand', string="Brand")
+    model = fields.Many2one('creditcalc.carmodel', string="Model")
+    year = fields.Many2one('creditcalc.caryear', string="Year")
 
     term = fields.Selection([
         ('1', "1 month"),
@@ -22,23 +22,25 @@ class Wizard(models.TransientModel):
         ('10', '10 months'),
         ('11', "11 months"),
         ('12', "12 months"),
-    ],String="Term of credit")
-    deposit = fields.Float(String="Deposit, UAH")
-    #
-    # discount = field.
-    # rate =
-    # payment =
-    # price=
+    ],string="Term of credit")
+    deposit = fields.Float(string="Deposit, UAH")
 
-    # def _default_sessions(self):
-    #     return self.env['openacademy.session'].browse(self._context.get('active_ids'))
-    #
-    # session_ids = fields.Many2many('openacademy.session',
-    #     string="Sessions", required=True, default=_default_sessions)
-    # attendee_ids = fields.Many2many('res.partner', string="Attendees")
-    #
+    car = fields.Many2one('creditcalc.cargarage')
+
+    price = fields.Float(related='car.price', readonly="True")
+    transmission = fields.Selection(related='car.transmission', readonly="True")
+    color = fields.Char(related='car.color', readonly="True")
+
+
     # @api.multi
-    # def subscribe(self):
-    #     for session in self.session_ids:
-    #         session.attendee_ids |= self.attendee_ids
-        # return {}
+    # def _name_field_selection(self):
+    #     for car in self.car:
+    #         car.name
+
+        # query = """
+        # SELECT features
+        # FROM table_option_two
+        # WHERE name = 'something'
+        # """
+        # self.env.cr.execute(query)
+        # return [(row[0], row[0]) for row in self.env.cr.fetchall()]
