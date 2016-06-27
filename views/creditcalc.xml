@@ -68,7 +68,7 @@
         <field name="arch" type="xml">
             <tree string="Rate Tree">
                 <field name="date"/>
-                <field name="rate"/>
+                <field name="name"/>
             </tree>
         </field>
     </record>
@@ -103,13 +103,28 @@
              <form string="Contract Form">
                  <sheet>
                      <group>
-                         <field name="customer_id"/>
-                         <field name="car_id" string="Car"/>
-                         <field name="date"/>
-                         <field name="rate"/>
-                         <field name="term"/>
-                         <field name="deposit"/>
-                         <field name="state"/>
+                         <group string="Parameters to choose">
+                             <field name="customer_id"/>
+                             <field name="brand"/>
+                             <field name="model" domain="[('parent_id', '=', brand)]"/>
+                             <field name="year" domain="[('parent_id', '=', model)]"/>
+                             <field name="car" domain="[('brand_id', '=', brand), ('model_id', '=', model), ('year_id', '=', year)]"/>
+                             <field name="deposit"/>
+                             <field name="date"/>
+                             <field name="term"/>
+                             <field name="state"/>
+                         </group>
+                         <group string="Calculate fields">
+                             <field name="transmission"/>
+                             <field name="color"/>
+                             <field name="car_price"/>
+                             <!--<field name="date_for_rate"/>-->
+                             <!--<field name="date_for_rate2"/>-->
+                             <!--<field name="base_rate"/>-->
+                             <field name="rate"/>
+                             <field name="discount"/>
+                             <field name="sum"/>
+                        </group>
                      </group>
                  </sheet>
              </form>

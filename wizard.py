@@ -2,6 +2,21 @@
 
 from openerp import models, fields, api
 
+TERM_SELECTION = [
+    ('1', "1 month"),
+    ('2', "2 months"),
+    ('3', "3 months"),
+    ('4', "4 months"),
+    ('5', "5 months"),
+    ('6', "6 months"),
+    ('7', "7 months"),
+    ('8', "8 months"),
+    ('9', "9 months"),
+    ('10', "10 months"),
+    ('11', "11 months"),
+    ('12', "12 months"),
+]
+
 class Wizard(models.TransientModel):
     _name = 'creditcalc.wizard'
 
@@ -9,20 +24,7 @@ class Wizard(models.TransientModel):
     model = fields.Many2one('creditcalc.carmodel', string="Model")
     year = fields.Many2one('creditcalc.caryear', string="Year")
 
-    term = fields.Selection([
-        ('1', "1 month"),
-        ('2', "2 months"),
-        ('3', "3 months"),
-        ('4', '4 months'),
-        ('5', "5 months"),
-        ('6', "6 months"),
-        ('7', '7 months'),
-        ('8', "8 months"),
-        ('9', "9 months"),
-        ('10', '10 months'),
-        ('11', "11 months"),
-        ('12', "12 months"),
-    ],string="Term of credit")
+    term = fields.Selection(TERM_SELECTION, string="Term of credit")
     deposit = fields.Float(string="Deposit, UAH")
 
     car = fields.Many2one('creditcalc.cargarage')
@@ -39,7 +41,7 @@ class Wizard(models.TransientModel):
 
         # query = """
         # SELECT features
-        # FROM table_option_two
+        # FROM table_option_twogitgit
         # WHERE name = 'something'
         # """
         # self.env.cr.execute(query)
