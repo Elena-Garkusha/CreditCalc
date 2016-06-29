@@ -39,7 +39,12 @@
                         <group>
                             <field name="brand_id"/>
                             <field name="model_id"/>
-                            <field name="year_id"/>
+                            <field name="year_id">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="parent_id"/>
+                                </tree>
+                            </field>
                             <field name="transmission"/>
                             <field name="color"/>
                             <field name="kms"/>
@@ -118,9 +123,6 @@
                              <field name="transmission"/>
                              <field name="color"/>
                              <field name="car_price"/>
-                             <!--<field name="date_for_rate"/>-->
-                             <!--<field name="date_for_rate2"/>-->
-                             <!--<field name="base_rate"/>-->
                              <field name="rate"/>
                              <field name="discount"/>
                              <field name="sum"/>
@@ -146,17 +148,17 @@
                         <field name="deposit"/>
                     </group>
                     <group string="Calculate fields">
-                        <!--<field name="discount"/>-->
-                        <!--<field name="rate"/>-->
-                        <!--<field name="payment"/>-->
-                        <field name="price"/>
                         <field name="transmission"/>
                         <field name="color"/>
+                        <field name="car_price"/>
+                        <field name="discount"/>
+                        <field name="sum" string="Sum of credit"/>
+                        <field name="rate"/>
                     </group>
                 </group>
                 <footer>
-                    <!--<button name="subscribe" type="object"-->
-                            <!--string="Subscribe" class="oe_highlight"/>-->
+                    <button name="paymments" type="object"
+                            string="Payments" class="oe_highlight"/>
                     <!--or-->
                     <button special="cancel" string="Cancel"/>
                 </footer>

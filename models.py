@@ -35,7 +35,7 @@ class CarGarage(models.Model):
     owner_id = fields.Many2one('res.partner', ondelete='cascade', string="Owner", required=False)
     sold = fields.Boolean(default=False, readonly="True")
 
-    @api.multi
+    @api.one
     def _concatinate_car_characteristics(self):
         self.name = '{} {}, {} kms, {} UAH,'.format(
             self.brand_id.name, self.model_id.name, str(self.kms), str(self.price))
@@ -62,12 +62,7 @@ class Contract(models.Model):
     _name = 'creditcalc.contract'
 
     date = fields.Date(default=fields.Date.today)
-    # date_for_rate = fields.Many2one(comodel_name='creditcalc.rate', compute='_date_for_rate')
-    # date_for_rate2 = fields.Date(compute='_date_for_rate')
-    # base_rate = fields.Float(related='date_for_rate2.rate')
-    # base_rate = fields.Float(compute='date_for_rate.rate');
     rate = fields.Float(compute='_change_credit_rate', string="Credit rate", readonly="True")
-    # rate = fields.Float()
     term = fields.Selection(TERM_SELECTION, string="Term of contract", required=True)
 
     customer_id = fields.Many2one('res.partner', ondelete='cascade', string="Customer")
@@ -90,34 +85,25 @@ class Contract(models.Model):
         ('canceled', 'Canceled'),
     ],string="State of contract", default="new")
 
-    # @api.multi
-    # @api.depends('date')
-    # def _date_for_rate(self):
-    #     pass
-    #     # print "################" + "********************"
-    #     # self._date_for_rate = self.date
-    #     # for r in self:
-    #         # for d in self.date_for_rate:
-    #         # print "################" + str(r.date_for_rate)+ "##################"
-    #             # print "**************" + str(d)+ "************"
-    #             # if d.date == self.date:
-    #             #     self.date_for_rate = d.date
-
+    @api.one
     @api.onchange('term')
     def _change_credit_rate(self):
         base_rate = self.env['creditcalc.rate'].search([('date', '=', self.date)])
-        # print "******************" + str(base_rate)
-        # self.rate = base_rate.name
-        for r in self:
-            if int(self.term) <= 3:
-                self.rate = base_rate.name
-            else:
-                self.rate = base_rate.name + float(self.term)/3.0
+        if int(self.term) <= 3:
+            self.rate = base_rate.name
+        else:
+            self.rate = base_rate.name + float(self.term)/3.0
 
     @api.depends('deposit', 'car_price')
     def _sum_of_discount(self):
         for r in self:
-            if r.deposit >= r.car_price*0.75:
+            if r.deposit >= r.car_price*0.8:
+                r.discount = r.car_price*0.12
+            elif r.deposit >= r.car_price*0.78:
+                r.discount = r.car_price*0.09
+            elif r.deposit >= r.car_price*0.76:
+                r.discount = r.car_price*0.07
+            elif r.deposit >= r.car_price*0.75:
                 r.discount = r.car_price*0.05
             else: r.discount = 0
 
