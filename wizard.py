@@ -37,6 +37,11 @@ class Wizard(models.TransientModel):
     sum = fields.Float(compute='_sum_of_credit', string="Credit sum")
     rate = fields.Float(compute='_change_credit_rate', string="Credit rate", readonly="True")
 
+    state = fields.Selection([('step1', "step1"),('step2', "step2")], default="step1")
+    # month = fields.Char()
+    # payment = fields._String(compute='_sum_of_payment')
+    payment = fields.Text(default="%%%%%%%%")
+
     @api.depends('deposit', 'car_price')
     def _sum_of_discount(self):
         for r in self:
@@ -63,3 +68,14 @@ class Wizard(models.TransientModel):
             self.rate = base_rate.name
         else:
             self.rate = base_rate.name + float(self.term)/3.0
+
+    # @api.one
+    @api.onchange('sum', 'rate', 'term')
+    def _sum_of_payment(self):
+        self.payment = "!!!!!!!!!!!!!!!"
+        if int(self.term) >= 1:
+            payment_str = "***"
+            payment_float = (self.sum+(self.sum*(self.rate/12)*int(self.term)/100.0))/int(self.term)
+            for t in range(1, int(self.term)):
+                payment_str += str(t) + "    " + str(payment_float) + "UAH/n"
+            self.payment = payment_str

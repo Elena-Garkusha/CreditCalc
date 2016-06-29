@@ -40,10 +40,10 @@
                             <field name="brand_id"/>
                             <field name="model_id"/>
                             <field name="year_id">
-                                <tree>
-                                    <field name="name"/>
-                                    <field name="parent_id"/>
-                                </tree>
+                                <!--<tree>-->
+                                    <!--<field name="name"/>-->
+                                    <!--<field name="parent_id"/>-->
+                                <!--</tree>-->
                             </field>
                             <field name="transmission"/>
                             <field name="color"/>
@@ -136,14 +136,17 @@
     <record model="ir.ui.view" id="wizard_form_view">
         <field name="name">wizard.form</field>
         <field name="model">creditcalc.wizard</field>
+        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Credit Calculator">
-                <group>
+                <field name="state" invisible="1"/>
+                <group states="step1">
                     <group string="Parameters to choose">
                         <field name="brand"/>
                         <field name="model" domain="[('parent_id', '=', brand)]"/>
                         <field name="year" domain="[('parent_id', '=', model)]"/>
                         <field name="car" domain="[('brand_id', '=', brand), ('model_id', '=', model), ('year_id', '=', year)]"/>
+                        <field name="date" invisible="1"/>
                         <field name="term"/>
                         <field name="deposit"/>
                     </group>
@@ -155,11 +158,33 @@
                         <field name="sum" string="Sum of credit"/>
                         <field name="rate"/>
                     </group>
+                    <notebook position="inside">
+                        <page string="Payments">
+                            <field name="payment"/>
+                        </page>
+                    </notebook>
                 </group>
-                <footer>
+                <group states="step2">
+                    <notebook position="inside">
+                        <page string="Payments">
+                            <!--<field name="month">-->
+                                <!--<tree>-->
+                                    <!--<field name="month"/>-->
+                                    <field name="payment"/>
+                                <!--</tree>-->
+                            <!--</field>-->
+                        </page>
+                    </notebook>
+                </group>
+
+                <footer states="step1">
+                <!--<footer>-->
                     <button name="paymments" type="object"
                             string="Payments" class="oe_highlight"/>
                     <!--or-->
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+                <footer states="step2">
                     <button special="cancel" string="Cancel"/>
                 </footer>
             </form>
