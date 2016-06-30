@@ -39,12 +39,7 @@
                         <group>
                             <field name="brand_id"/>
                             <field name="model_id"/>
-                            <field name="year_id">
-                                <!--<tree>-->
-                                    <!--<field name="name"/>-->
-                                    <!--<field name="parent_id"/>-->
-                                <!--</tree>-->
-                            </field>
+                            <field name="year_id"/>
                             <field name="transmission"/>
                             <field name="color"/>
                             <field name="kms"/>
@@ -142,6 +137,7 @@
                 <field name="state" invisible="1"/>
                 <group states="step1">
                     <group string="Parameters to choose">
+                        <!--<field name="state"/>-->
                         <field name="brand"/>
                         <field name="model" domain="[('parent_id', '=', brand)]"/>
                         <field name="year" domain="[('parent_id', '=', model)]"/>
@@ -158,33 +154,28 @@
                         <field name="sum" string="Sum of credit"/>
                         <field name="rate"/>
                     </group>
+                    <!--<notebook position="inside">-->
+                        <!--<page string="Payments">-->
+                            <!--<field name="payment"/>-->
+                        <!--</page>-->
+                    <!--</notebook>-->
+                </group>
+                <group states="step2">
+                    <!--<field name="sum" string="Sum of credit"/>-->
+                    <!--<field name="term"/>-->
+                    <!--<field name="rate"/>-->
                     <notebook position="inside">
                         <page string="Payments">
                             <field name="payment"/>
                         </page>
                     </notebook>
                 </group>
-                <group states="step2">
-                    <notebook position="inside">
-                        <page string="Payments">
-                            <!--<field name="month">-->
-                                <!--<tree>-->
-                                    <!--<field name="month"/>-->
-                                    <field name="payment"/>
-                                <!--</tree>-->
-                            <!--</field>-->
-                        </page>
-                    </notebook>
-                </group>
 
-                <footer states="step1">
-                <!--<footer>-->
-                    <button name="paymments" type="object"
+                <footer>
+                    <button states="step1" name="paymment_calendar" type="object"
                             string="Payments" class="oe_highlight"/>
-                    <!--or-->
-                    <button special="cancel" string="Cancel"/>
-                </footer>
-                <footer states="step2">
+                    <button states="step2" name="to_calculator" type="object"
+                            string="Back to calculator" class="oe_highlight"/>
                     <button special="cancel" string="Cancel"/>
                 </footer>
             </form>

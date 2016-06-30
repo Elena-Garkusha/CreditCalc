@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from openerp import models, fields, api
+# from openerp.osv import osv
 
 TERM_SELECTION = [
     ('1', "1 month"),
@@ -18,8 +19,8 @@ TERM_SELECTION = [
 ]
 
 class Wizard(models.TransientModel):
+# class Wizard(osv.osv_memory):
     _name = 'creditcalc.wizard'
-
 
     brand = fields.Many2one('creditcalc.carbrand', string="Brand")
     model = fields.Many2one('creditcalc.carmodel', string="Model")
@@ -38,9 +39,8 @@ class Wizard(models.TransientModel):
     rate = fields.Float(compute='_change_credit_rate', string="Credit rate", readonly="True")
 
     state = fields.Selection([('step1', "step1"),('step2', "step2")], default="step1")
-    # month = fields.Char()
-    # payment = fields._String(compute='_sum_of_payment')
-    payment = fields.Text(default="%%%%%%%%")
+    payment = fields.Text(compute='_sum_of_payment')
+    # payment = fields.Text()
 
     @api.depends('deposit', 'car_price')
     def _sum_of_discount(self):
@@ -69,13 +69,37 @@ class Wizard(models.TransientModel):
         else:
             self.rate = base_rate.name + float(self.term)/3.0
 
-    # @api.one
+    @api.one
     @api.onchange('sum', 'rate', 'term')
     def _sum_of_payment(self):
-        self.payment = "!!!!!!!!!!!!!!!"
-        if int(self.term) >= 1:
-            payment_str = "***"
-            payment_float = (self.sum+(self.sum*(self.rate/12)*int(self.term)/100.0))/int(self.term)
-            for t in range(1, int(self.term)):
-                payment_str += str(t) + "    " + str(payment_float) + "UAH/n"
+        if int(self.term) > 0:
+            payment_str = ""
+            payment_float = round((self.sum+(self.sum*(self.rate/12)*int(self.term)/100.0))/int(self.term), 2)
+            for t in range(1, int(self.term)+1):
+                payment_str += str(t) + " month:" + "        " + str(payment_float) + " UAH\n"
             self.payment = payment_str
+
+    @api.multi
+    def paymment_calendar(self):
+        self.write({'state': "step2"})
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'creditcalc.wizard',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_id': self.id,
+            'views': [(False, 'form')],
+            'target': 'new',
+        }
+    @api.multi
+    def to_calculator(self):
+        self.write({'state': "step1"})
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'creditcalc.wizard',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_id': self.id,
+            'views': [(False, 'form')],
+            'target': 'new',
+        }
